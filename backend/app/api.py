@@ -36,7 +36,9 @@ def create_text_norm(payload: NormCreate, db: Session = Depends(get_db)):
     if existing:
         raise HTTPException(409, detail={"message": "Documento duplicado", "id": existing.id})
     norm = Norm(**payload.model_dump(), file_hash=digest)
-    db.add(norm); db.commit(); db.refresh(norm)
+    db.add(norm)
+    db.commit()
+    db.refresh(norm)
     process_norm.delay(norm.id)
     return {"id": norm.id, "status": norm.status}
 
@@ -50,12 +52,16 @@ async def upload_norm(title: str = Form(...), agency: str = Form(...),
     existing = db.scalar(select(Norm).where(Norm.file_hash == digest))
     if existing:
         raise HTTPException(409, detail={"message": "Documento duplicado", "id": existing.id})
-    upload_dir = Path(get_settings().upload_dir); upload_dir.mkdir(parents=True, exist_ok=True)
-    path = upload_dir / f"{digest}.pdf"; path.write_bytes(data)
+    upload_dir = Path(get_settings().upload_dir)
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    path = upload_dir / f"{digest}.pdf"
+    path.write_bytes(data)
     raw_text, _ = extract_pdf(path)
     norm = Norm(title=title, agency=agency, effective_from=effective_from,
                 file_hash=digest, raw_text=raw_text, metadata_json={"filename": file.filename})
-    db.add(norm); db.commit(); db.refresh(norm)
+    db.add(norm)
+    db.commit()
+    db.refresh(norm)
     process_norm.delay(norm.id)
     return {"id": norm.id, "status": norm.status}
 
@@ -63,7 +69,8 @@ async def upload_norm(title: str = Form(...), agency: str = Form(...),
 @router.get("/norms/{norm_id}")
 def get_norm(norm_id: str, db: Session = Depends(get_db)):
     norm = db.get(Norm, norm_id)
-    if not norm: raise HTTPException(404, "Norma não encontrada")
+    if not norm:
+        raise HTTPException(404, "Norma não encontrada")
     provisions = db.scalars(select(Provision).where(Provision.norm_id == norm_id)
                             .order_by(Provision.position)).all()
     relations = db.scalars(select(Relation).where(Relation.source_norm_id == norm_id)).all()
@@ -78,7 +85,8 @@ def get_norm(norm_id: str, db: Session = Depends(get_db)):
 def compare(old_id: str, new_id: str, db: Session = Depends(get_db)):
     old = db.scalars(select(Provision).where(Provision.norm_id == old_id)).all()
     new = db.scalars(select(Provision).where(Provision.norm_id == new_id)).all()
-    if not old or not new: raise HTTPException(404, "Uma das normas ainda não foi processada")
+    if not old or not new:
+        raise HTTPException(404, "Uma das normas ainda não foi processada")
     return {"changes": [item.model_dump() for item in compare_provisions(old, new)]}
 
 
@@ -95,7 +103,10 @@ def ask(payload: QuestionRequest, db: Session = Depends(get_db)):
 
 @router.post("/reviews", status_code=201)
 def review(payload: ReviewCreate, db: Session = Depends(get_db)):
-    item = Review(**payload.model_dump()); db.add(item); db.commit(); db.refresh(item)
+    item = Review(**payload.model_dump())
+    db.add(item)
+    db.commit()
+    db.refresh(item)
     return {"id": item.id}
 
 

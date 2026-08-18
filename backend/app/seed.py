@@ -11,6 +11,8 @@ with SessionLocal() as db:
     digest = sha256(TEXT.encode())
     norm = Norm(title="Resolução demonstrativa nº 1", agency="ANEEL", number="1",
                 file_hash=digest, raw_text=TEXT, effective_from=date.today())
-    db.add(norm); db.commit(); db.refresh(norm)
+    db.add(norm)
+    db.commit()
+    db.refresh(norm)
     process_norm(norm.id)
     print(norm.id)

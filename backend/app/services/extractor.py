@@ -5,7 +5,7 @@ from app.config import get_settings
 from app.schemas import Evidence, Obligation
 
 
-MODAL = re.compile(r"(?i)(deverá|deve|fica obrigado|é obrigatório)\s+(.{5,220})")
+MODAL = re.compile(r"(?i)(dever[ãa]o?|deve[mr]?|fica obrigad[oa]|[ée] obrigat[óo]ri[oa])\s+(.{5,220})")
 SUBJECT = re.compile(r"(?i)(concessionárias?|distribuidoras?|agentes?|empresas?|operadores?)")
 DEADLINE = re.compile(r"(?i)(?:prazo de|em até)\s+(\d+\s+(?:dias|meses|anos))")
 
