@@ -1,0 +1,3 @@
+{"id":"case-001","text":"As distribuidoras deverão enviar o relatório em até 30 dias.","expected_type":"obligation","predicted_type":"obligation","citation_valid":true}
+{"id":"case-002","text":"Fica revogado o art. 12 da Resolução 10.","expected_type":"revocation","predicted_type":"revocation","citation_valid":true}
+{"id":"case-003","text":"O prazo passa de 30 para 15 dias.","expected_type":"deadline_change","predicted_type":"deadline_change","citation_valid":true}
