@@ -30,6 +30,36 @@ docker compose up --build
 O padrão `LLM_PROVIDER=heuristic` funciona sem chave externa. Configure
 `LLM_PROVIDER=openai` e `OPENAI_API_KEY` para extração por modelo.
 
+## Arquitetura
+
+![Diagrama de arquitetura do RegulaGraph AI](docs/arquitetura.png)
+
+### Exemplo real de funcionamento
+
+Ao inserir uma nova resolução da ANEEL, o sistema responde:
+
+- Quais artigos foram modificados ou revogados;
+- Quais normas anteriores foram citadas;
+- Quais obrigações foram criadas;
+- Quais empresas ou agentes regulados foram afetados;
+- Quais prazos começaram ou terminaram;
+- Quais conceitos jurídicos mudaram;
+- Possíveis conflitos com outras normas;
+- Linha do tempo da evolução regulatória;
+- Evidências e páginas que sustentam cada conclusão;
+- Grau de confiança da IA;
+- Pontos que precisam de revisão humana.
+
+## Grafo regulatório
+
+![Grafo regulatório do RegulaGraph AI](docs/grafo-regulatorio.png)
+
+Essa é a parte mais diferenciada: cada norma, artigo, órgão, entidade e
+obrigação é representado como um nó, e as relações entre eles (alteração,
+revogação, regulamentação, citação) formam arestas no Neo4j. Isso permite
+navegar o impacto regulatório de forma transitiva — por exemplo, descobrir
+todas as normas afetadas por uma única revogação.
+
 ## Fluxo principal
 
 1. Envie uma norma em PDF ou texto.
