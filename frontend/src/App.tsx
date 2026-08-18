@@ -13,7 +13,7 @@ export function App() {
   const [answer, setAnswer] = useState("Faça uma pergunta sobre as normas vigentes.");
 
   const load = () => fetch(`${API}/norms`).then(r => r.json()).then(setNorms).catch(() => setNorms([]));
-  useEffect(load, []);
+  useEffect(() => { load(); }, []);
 
   async function ask(e: React.FormEvent) {
     e.preventDefault();
